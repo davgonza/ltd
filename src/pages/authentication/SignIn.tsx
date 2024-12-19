@@ -12,20 +12,38 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import paths, { rootPaths } from 'routes/paths';
 import LogoHeader from 'layouts/main-layout/sidebar/LogoHeader';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
+import { supabase } from '/utils/supabaseClient';
 
 const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event: SyntheticEvent) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
-    navigate(rootPaths.root);
+    if (!email || !password) {
+      setError('Please fill out all fields.');
+      return;
+    }
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      navigate(rootPaths.root); // Navigate on successful sign-in
+    } catch (e) {
+      setError('An unexpected error occurred. Please try again.');
+    }
   };
 
   return (
@@ -48,6 +66,12 @@ const SignIn = () => {
           </Typography>
         </Stack>
 
+        {error && (
+          <Typography variant="body2" color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+
         <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit}>
           <Stack spacing={2}>
             <TextField
@@ -56,6 +80,8 @@ const SignIn = () => {
               type="email"
               placeholder="Enter your email"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               fullWidth
               required
             />
@@ -65,6 +91,8 @@ const SignIn = () => {
               name="password"
               placeholder="Enter your password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               fullWidth
               required
             />

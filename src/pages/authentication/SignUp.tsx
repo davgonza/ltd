@@ -12,20 +12,47 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import paths, { rootPaths } from 'routes/paths';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
 import LogoHeader from 'layouts/main-layout/sidebar/LogoHeader';
+import { supabase } from '/utils/supabaseClient';
 
 const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event: SyntheticEvent) => {
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
-    navigate(rootPaths.root);
+    setError(null); // Reset errors before submission
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: 'http://localhost:3000/welcome', // Change to your redirect URL
+        },
+      });
+
+      if (error) throw error;
+      if (data.user) {
+        // Optional: save user info to your database or perform additional setup
+        navigate(rootPaths.root); // Redirect to the root page after successful sign-up
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred.');
+    }
   };
 
   return (
@@ -58,6 +85,8 @@ const SignUp = () => {
               autoComplete="name"
               fullWidth
               required
+              value={formData.name}
+              onChange={handleChange}
             />
 
             <TextField
@@ -68,6 +97,8 @@ const SignUp = () => {
               autoComplete="email"
               fullWidth
               required
+              value={formData.email}
+              onChange={handleChange}
             />
 
             <PasswordTextField
@@ -77,8 +108,16 @@ const SignUp = () => {
               autoComplete="current-password"
               fullWidth
               required
+              value={formData.password}
+              onChange={handleChange}
             />
           </Stack>
+
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          )}
 
           <FormControlLabel
             control={<Checkbox {...checkBoxLabel} color="primary" />}
