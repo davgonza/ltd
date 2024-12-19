@@ -18,7 +18,7 @@ import paths, { rootPaths } from 'routes/paths';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
 import LogoHeader from 'layouts/main-layout/sidebar/LogoHeader';
-import { supabase } from '/utils/supabaseClient';
+import { supabase } from '../../utils/supabaseClient';
 
 const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
@@ -41,13 +41,15 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: 'http://localhost:3000/welcome', // Change to your redirect URL
+          data: { name: formData.name },
+          emailRedirectTo: 'http://localhost:3000/welcome', // Change to your redirect URL... like http://localhost:3000/LTD/welcome
         },
       });
 
       if (error) throw error;
       if (data.user) {
         // Optional: save user info to your database or perform additional setup
+        localStorage.setItem('signedUpName', formData.name);
         navigate(rootPaths.root); // Redirect to the root page after successful sign-up
       }
     } catch (err: any) {

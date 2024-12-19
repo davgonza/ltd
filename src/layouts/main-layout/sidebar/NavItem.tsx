@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { MenuItem } from 'routes/sitemap';
 import IconifyIcon from 'components/base/IconifyIcon';
 import CollapsedItems from './CollapsedItems';
+import { supabase } from '../../../utils/supabaseClient';
 
 const NavItem = ({ item }: { item: MenuItem }) => {
   const location = useLocation();
@@ -14,6 +15,10 @@ const NavItem = ({ item }: { item: MenuItem }) => {
   };
 
   const { name, path, icon, svgIcon: SvgIcon, active, items } = item;
+  async function signOut() {
+    console.log('clicked signout');
+    const { error } = await supabase.auth.signOut();
+  }
 
   const Icon = icon ? (
     <IconifyIcon icon={icon} fontSize={32} />
@@ -28,6 +33,11 @@ const NavItem = ({ item }: { item: MenuItem }) => {
         alignItems: 'stretch',
         p: 0,
         opacity: active ? 1 : 0.5,
+      }}
+      onClick={(e: any) => {
+        if (e.target.textContent == 'Sign Out') {
+          signOut();
+        }
       }}
     >
       <ListItemButton

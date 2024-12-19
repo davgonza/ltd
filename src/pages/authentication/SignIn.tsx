@@ -18,12 +18,12 @@ import paths, { rootPaths } from 'routes/paths';
 import LogoHeader from 'layouts/main-layout/sidebar/LogoHeader';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
-import { supabase } from '/utils/supabaseClient';
+import { supabase } from '../../utils/supabaseClient';
 
 const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
 const SignIn = () => {
-  const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -35,12 +35,12 @@ const SignIn = () => {
       return;
     }
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         setError(error.message);
         return;
       }
-      navigate(rootPaths.root); // Navigate on successful sign-in
+      //   navigate(rootPaths.root); // Navigate on successful sign-in
     } catch (e) {
       setError('An unexpected error occurred. Please try again.');
     }

@@ -8,9 +8,10 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import Profile from 'assets/profile.png';
 import IconifyIcon from 'components/base/IconifyIcon';
+import { supabase } from '../../../utils/supabaseClient';
 
 interface MenuItem {
   id: number;
@@ -39,6 +40,32 @@ const menuItems: MenuItem[] = [
 const AccountDropdown = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const [userName, setUserName] = useState<string>('');
+  const [userRole, setUserRole] = useState<string>('User'); // Default role fallback
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (session) {
+        const s = session as any;
+        let user = s.session.user.user_metadata.name;
+
+        // first go by signed up name... if they're coming from there
+        if (localStorage.getItem('signedUpName')) {
+          user = localStorage.getItem('signedUpName');
+        }
+
+        setUserName(user || 'Anonymous');
+
+        // const user = session.user;
+        // setUserName(user.user_metadata?.name || 'Anonymous');
+        // setUserRole(user.user_metadata?.role || 'User');
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,12 +116,12 @@ const AccountDropdown = () => {
         <Box sx={{ display: { xs: 'none', xl: 'block' } }}>
           <Stack direction="row" alignItems="center" columnGap={6}>
             <Typography variant="h6" component="p" color="primary.darker" gutterBottom>
-              Abby
+              {userName}
             </Typography>
             <IconifyIcon icon="ph:caret-down-bold" fontSize={16} color="primary.darker" />
           </Stack>
           <Typography variant="subtitle2" textAlign="left" color="primary.lighter">
-            Admin
+            {userRole}
           </Typography>
         </Box>
       </Button>
