@@ -42,7 +42,9 @@ const SignUp = () => {
         password: formData.password,
         options: {
           data: { name: formData.name },
-          emailRedirectTo: 'http://localhost:3000/welcome', // Change to your redirect URL... like http://localhost:3000/LTD/welcome
+          emailRedirectTo: window.location.href.includes('localhost')
+            ? 'http://localhost:3000/ltd/'
+            : 'https://davgonza.github.io/ltd', // Change to your redirect URL... like http://localhost:3000/LTD/welcome
         },
       });
 
@@ -59,7 +61,7 @@ const SignUp = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 10 }}>
-      <LogoHeader sx={{ justifyContent: 'center', mb: 5 }} />
+      <LogoHeader sx={{ justifyContent: 'center', mb: 5, pointerEvents: 'none' }} />
 
       <Paper sx={{ p: 5 }}>
         <Stack

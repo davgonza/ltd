@@ -23,7 +23,7 @@ import { supabase } from '../../utils/supabaseClient';
 const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
 
 const SignIn = () => {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const SignIn = () => {
         setError(error.message);
         return;
       }
-      //   navigate(rootPaths.root); // Navigate on successful sign-in
+      navigate(rootPaths.root); // Navigate on successful sign-in
     } catch (e) {
       setError('An unexpected error occurred. Please try again.');
     }
@@ -48,7 +48,7 @@ const SignIn = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 10 }}>
-      <LogoHeader sx={{ justifyContent: 'center', mb: 5 }} />
+      <LogoHeader sx={{ justifyContent: 'center', mb: 5, pointerEvents: 'none' }} />
 
       <Paper sx={{ p: 5 }}>
         <Stack

@@ -1,5 +1,7 @@
 import { Suspense, lazy } from 'react';
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { Outlet, Navigate, createBrowserRouter } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../utils/supabaseClient';
 import paths, { rootPaths } from './paths';
 
 const App = lazy(() => import('App'));
@@ -12,6 +14,33 @@ const Page404 = lazy(() => import('pages/errors/Page404'));
 
 import PageLoader from 'components/loading/PageLoader';
 import Progress from 'components/loading/Progress';
+
+// ProtectedRoute Component
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data } = (await supabase.auth.getSession()) as any;
+      setUser(data || null);
+      setLoading(false);
+    };
+
+    checkUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => {
+      listener?.subscription?.unsubscribe();
+    };
+  }, []);
+
+  if (loading) return <PageLoader />; // Replace with a loading spinner if needed
+  return user ? children : <Navigate to={paths.signin} replace />;
+};
 
 export const routes = [
   {
@@ -26,7 +55,9 @@ export const routes = [
         element: (
           <MainLayout>
             <Suspense fallback={<PageLoader />}>
-              <Outlet />
+              <ProtectedRoute>
+                <Outlet />
+              </ProtectedRoute>
             </Suspense>
           </MainLayout>
         ),

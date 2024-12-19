@@ -49,7 +49,7 @@ const AccountDropdown = () => {
       const { data: session } = await supabase.auth.getSession();
       if (session) {
         const s = session as any;
-        let user = s.session.user.user_metadata.name;
+        let user = s.session?.user?.user_metadata?.name;
 
         // first go by signed up name... if they're coming from there
         if (localStorage.getItem('signedUpName')) {
