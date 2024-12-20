@@ -6,6 +6,8 @@ import { currencyFormat } from 'helpers/utils';
 import CustomPagination from 'components/common/CustomPagination';
 import SearchFilter from 'components/common/SearchFilter';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
+import AddEmployeeModal from './AddEmployeeModal';
+import { supabase } from '../../../../utils/supabaseClient';
 
 type Row = {
   id: number;
@@ -123,6 +125,24 @@ const ProductPerformance = () => {
     },
   ];
 
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSave = async (newEmployee: any) => {
+    try {
+      const { error } = await supabase.from('employees').insert([newEmployee]);
+
+      if (error) {
+        console.error('Error saving employee:', error.message);
+      } else {
+        console.log('Employee added successfully');
+        setShowModal(false); // Close the modal
+        // Refresh the grid here if necessary
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
+  };
+
   return (
     <Paper sx={{ p: 3 }}>
       <Stack
@@ -136,9 +156,21 @@ const ProductPerformance = () => {
         </Typography>
         <Stack direction="row" spacing={2}>
           <SearchFilter apiRef={apiRef} sx={{ maxWidth: 350 }} />
-          <Button variant="contained" color="primary" onClick={handleAddOpen}>
+          {/* <Button variant="contained" color="primary" onClick={handleAddOpen}>
             Add
-          </Button>
+          </Button> */}
+          <div>
+            <Button variant="contained" color="primary" onClick={() => setShowModal(true)}>
+              Add
+            </Button>
+            {showModal && (
+              <AddEmployeeModal
+                open={showModal}
+                onClose={() => setShowModal(false)}
+                onSave={handleSave}
+              />
+            )}
+          </div>
         </Stack>
       </Stack>
 
@@ -165,7 +197,7 @@ const ProductPerformance = () => {
       <CustomPagination apiRef={apiRef} />
 
       {/* Add Modal */}
-      <Modal open={openAddModal} onClose={handleAddClose}>
+      {/* <Modal open={openAddModal} onClose={handleAddClose}>
         <Box
           sx={{
             position: 'absolute',
@@ -209,7 +241,7 @@ const ProductPerformance = () => {
             </Button>
           </Stack>
         </Box>
-      </Modal>
+      </Modal> */}
 
       {/* Info Modal */}
       <EmployeeDetailsModal
