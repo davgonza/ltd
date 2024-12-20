@@ -24,9 +24,9 @@ const ProductPerformance = () => {
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<Row['assigned'] | null>(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    jobTitle: '',
+    first_name: '',
+    last_name: '',
+    job_classification: '',
   });
 
   const handleAddOpen = () => setOpenAddModal(true);
@@ -49,10 +49,10 @@ const ProductPerformance = () => {
     const newRow: Row = {
       id: rows.length + 1,
       assigned: {
-        name: `${formData.firstName} ${formData.lastName}`,
-        role: formData.jobTitle,
+        name: `${formData.first_name} ${formData.last_name}`,
+        role: formData.job_classification,
       },
-      name: `${formData.firstName} ${formData.lastName}`,
+      name: `${formData.first_name} ${formData.last_name}`,
       priority: 'Low',
       budget: 10000,
     };
@@ -135,7 +135,19 @@ const ProductPerformance = () => {
         console.error('Error saving employee:', error.message);
       } else {
         console.log('Employee added successfully');
-        setShowModal(false); // Close the modal
+
+        const newRow: Row = {
+          id: rows.length + 1,
+          assigned: {
+            name: `${newEmployee.first_name} ${newEmployee.last_name}`,
+            role: newEmployee.job_classification,
+          },
+          name: `${newEmployee.first_name} ${newEmployee.last_name}`,
+          priority: 'Low',
+          budget: 10000,
+        };
+        setRows([...rows, newRow]);
+        setShowModal(false);
         // Refresh the grid here if necessary
       }
     } catch (error) {
@@ -217,22 +229,22 @@ const ProductPerformance = () => {
           <Stack spacing={2}>
             <TextField
               label="First Name"
-              name="firstName"
-              value={formData.firstName}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
               fullWidth
             />
             <TextField
               label="Last Name"
-              name="lastName"
-              value={formData.lastName}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
               fullWidth
             />
             <TextField
               label="Job Title"
-              name="jobTitle"
-              value={formData.jobTitle}
+              name="job_classification"
+              value={formData.job_classification}
               onChange={handleChange}
               fullWidth
             />

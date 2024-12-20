@@ -15,13 +15,13 @@ import {
 
 interface SelectedPerson {
   code?: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   name?: string;
-  jobClassification?: string;
-  homeLocation?: string;
+  job_classification?: string;
+  home_location?: string;
   status?: string;
-  dateStarted?: string;
+  date_started?: string;
   address?: string;
   defaultCustomer?: string;
   pern?: string;
@@ -97,14 +97,14 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 label="First Name"
                 variant="outlined"
                 required
-                defaultValue={selectedPerson?.firstName || ''}
+                defaultValue={selectedPerson?.first_name || ''}
               />
               <TextField
                 fullWidth
                 label="Last Name"
                 variant="outlined"
                 required
-                defaultValue={selectedPerson?.lastName || ''}
+                defaultValue={selectedPerson?.last_name || ''}
               />
 
               <TextField
@@ -131,7 +131,7 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 defaultValue={selectedPerson?.name || ''}
               />
 
-              {/* <Select fullWidth defaultValue={selectedPerson?.homeLocation || ''} sx={{marginBottom: '20px !important'}}> */}
+              {/* <Select fullWidth defaultValue={selectedPerson?.home_location || ''} sx={{marginBottom: '20px !important'}}> */}
               <TextField
                 sx={{ width: '100%' }}
                 value={home_value}
@@ -168,7 +168,7 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 type="date"
                 required
                 InputLabelProps={{ shrink: true }}
-                defaultValue={selectedPerson?.dateStarted || ''}
+                defaultValue={selectedPerson?.date_started || ''}
               />
               <TextField
                 fullWidth

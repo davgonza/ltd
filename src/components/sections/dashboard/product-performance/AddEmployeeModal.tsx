@@ -24,29 +24,29 @@ interface AddEmployeeModalProps {
 
 interface EmployeeFormData {
   code: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  homeLocation: string;
-  jobClassification: string;
-  dateStarted: Date | null;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  home_location: string;
+  job_classification: string;
+  date_started: Date | null;
   address: string;
   pern: string;
-  noPayment: boolean;
+  no_payment: boolean;
 }
 
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSave }) => {
   const [formData, setFormData] = React.useState<EmployeeFormData>({
     code: '',
-    firstName: '',
-    lastName: '',
-    fullName: '',
-    homeLocation: '',
-    jobClassification: '',
-    dateStarted: null,
+    first_name: '',
+    last_name: '',
+    full_name: '',
+    home_location: '',
+    job_classification: '',
+    date_started: null,
     address: '',
     pern: '',
-    noPayment: false,
+    no_payment: false,
   });
 
   const handleChange = (field: keyof EmployeeFormData, value: any) => {
@@ -74,27 +74,27 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSa
           />
           <TextField
             label="First Name"
-            value={formData.firstName}
-            onChange={(e) => handleChange('firstName', e.target.value)}
+            value={formData.first_name}
+            onChange={(e) => handleChange('first_name', e.target.value)}
             fullWidth
           />
           <TextField
             label="Last Name"
-            value={formData.lastName}
-            onChange={(e) => handleChange('lastName', e.target.value)}
+            value={formData.last_name}
+            onChange={(e) => handleChange('last_name', e.target.value)}
             fullWidth
           />
           <TextField
             label="Full Name"
-            value={formData.fullName}
-            onChange={(e) => handleChange('fullName', e.target.value)}
+            value={formData.full_name}
+            onChange={(e) => handleChange('full_name', e.target.value)}
             fullWidth
           />
           <FormControl fullWidth>
             <InputLabel>Home Location</InputLabel>
             <Select
-              value={formData.homeLocation}
-              onChange={(e) => handleChange('homeLocation', e.target.value)}
+              value={formData.home_location}
+              onChange={(e) => handleChange('home_location', e.target.value)}
             >
               <MenuItem value="Location 1">Location 1</MenuItem>
               <MenuItem value="Location 2">Location 2</MenuItem>
@@ -104,8 +104,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSa
           <FormControl fullWidth>
             <InputLabel>Job Classification</InputLabel>
             <Select
-              value={formData.jobClassification}
-              onChange={(e) => handleChange('jobClassification', e.target.value)}
+              value={formData.job_classification}
+              onChange={(e) => handleChange('job_classification', e.target.value)}
             >
               <MenuItem value="Mechanic Electrician">Mechanic Electrician</MenuItem>
               <MenuItem value="Plumber">Plumber</MenuItem>
@@ -114,8 +114,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSa
           </FormControl>
           <DatePicker
             label="Date Started"
-            value={formData.dateStarted}
-            onChange={(newValue) => handleChange('dateStarted', newValue)}
+            value={formData.date_started}
+            onChange={(newValue) => handleChange('date_started', newValue)}
             slots={{
               textField: (textFieldProps) => <TextField {...textFieldProps} />,
             }}
@@ -135,8 +135,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSa
           <FormControlLabel
             control={
               <Checkbox
-                checked={formData.noPayment}
-                onChange={(e) => handleChange('noPayment', e.target.checked)}
+                checked={formData.no_payment}
+                onChange={(e) => handleChange('no_payment', e.target.checked)}
               />
             }
             label="No Payment"
