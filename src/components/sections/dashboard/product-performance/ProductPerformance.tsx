@@ -8,18 +8,19 @@ import SearchFilter from 'components/common/SearchFilter';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
 import AddEmployeeModal from './AddEmployeeModal';
 import { supabase } from '../../../../utils/supabaseClient';
+import { EmployeeFormData } from '../../../../data/product-performance';
 
 type Row = {
   id: number;
   assigned: any;
-  name: string;
-  priority: 'Low' | 'Medium' | 'High' | 'Critical';
+  default_customer: string;
+  status: 'Low' | 'Medium' | 'High' | 'Critical';
   budget: number;
 };
 
 const ProductPerformance = () => {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = useState<Row[]>(initialRows as Row[]);
+  const [rows, setRows] = useState<EmployeeFormData[]>(initialRows as EmployeeFormData[]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<Row['assigned'] | null>(null);
@@ -31,7 +32,7 @@ const ProductPerformance = () => {
 
   const handleAddOpen = () => setOpenAddModal(true);
   const handleAddClose = () => setOpenAddModal(false);
-  const handleInfoOpen = (person: Row['assigned']) => {
+  const handleInfoOpen = (person: any) => {
     setSelectedPerson(person);
     setOpenInfoModal(true);
   };
@@ -45,28 +46,29 @@ const ProductPerformance = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAdd = () => {
-    const newRow: Row = {
-      id: rows.length + 1,
-      assigned: {
-        name: `${formData.first_name} ${formData.last_name}`,
-        role: formData.job_classification,
-      },
-      name: `${formData.first_name} ${formData.last_name}`,
-      priority: 'Low',
-      budget: 10000,
-    };
-    setRows([...rows, newRow]);
-    handleAddClose();
-  };
+  // TODO - deprecated
+  //   const handleAdd = () => {
+  //     const newRow: EmployeeFormData = {
+  //       id: rows.length + 1,
+  //       assigned: {
+  //         name: `${formData.first_name} ${formData.last_name}`,
+  //         role: formData.job_classification,
+  //       },
+  //       default_customer: `${formData.first_name} ${formData.last_name}`,
+  //       status: 'Low',
+  //       budget: 10000,
+  //     };
+  //     setRows([...rows, newRow]);
+  //     handleAddClose();
+  //   };
 
-  const columns: GridColDef<Row>[] = [
+  const columns: GridColDef<EmployeeFormData>[] = [
     {
-      field: 'assigned',
-      headerName: 'Assigned',
+      field: 'full_name',
+      headerName: 'Name',
       flex: 1.5,
       minWidth: 200,
-      valueGetter: ({ name }: { name: string }) => name,
+      valueGetter: ({ full_name }: { full_name: string }) => full_name,
       renderCell: (params) => {
         return (
           <Stack justifyContent="center" height={1}>
@@ -76,24 +78,24 @@ const ProductPerformance = () => {
               href="#!"
               color="text.primary"
               sx={{ width: 'max-content', cursor: 'pointer' }}
-              onClick={() => handleInfoOpen(params.row.assigned)}
+              onClick={() => handleInfoOpen(params.row)}
             >
-              {params.row.assigned.name}
+              {params.row.full_name}
             </Typography>
-            <Typography variant="subtitle2">{params.row.assigned.role}</Typography>
+            <Typography variant="subtitle2">{params.row.job_classification}</Typography>
           </Stack>
         );
       },
     },
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'default_customer',
+      headerName: 'Customers',
       flex: 1.5,
       minWidth: 200,
     },
     {
-      field: 'priority',
-      headerName: 'Priority',
+      field: 'status',
+      headerName: 'Status',
       flex: 1,
       minWidth: 150,
       renderCell: (params) => {
@@ -116,12 +118,12 @@ const ProductPerformance = () => {
       },
     },
     {
-      field: 'budget',
-      headerName: 'Budget',
+      field: 'date_started',
+      headerName: 'Date Started',
       flex: 0.5,
       minWidth: 150,
       valueGetter: (value) => value,
-      valueFormatter: (value: number) => `${currencyFormat(value / 1000)}k`,
+      //   valueFormatter: (value: Date) => ``,
     },
   ];
 
@@ -136,15 +138,20 @@ const ProductPerformance = () => {
       } else {
         console.log('Employee added successfully');
 
-        const newRow: Row = {
-          id: rows.length + 1,
-          assigned: {
-            name: `${newEmployee.first_name} ${newEmployee.last_name}`,
-            role: newEmployee.job_classification,
-          },
-          name: `${newEmployee.first_name} ${newEmployee.last_name}`,
-          priority: 'Low',
-          budget: 10000,
+        const newRow: EmployeeFormData = {
+          id: 1,
+          code: newEmployee.code,
+          full_name: newEmployee.full_name,
+          job_classification: newEmployee.job_classification,
+          default_customer: newEmployee.default_customer,
+          date_started: newEmployee.date_started,
+          status: newEmployee.status,
+          first_name: newEmployee.first_name,
+          last_name: newEmployee.last_name,
+          home_location: newEmployee.home_location,
+          address: newEmployee.address,
+          pern: newEmployee.pern,
+          no_payment: newEmployee.no_payment,
         };
         setRows([...rows, newRow]);
         setShowModal(false);

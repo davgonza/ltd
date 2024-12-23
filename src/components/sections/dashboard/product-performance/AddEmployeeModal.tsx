@@ -15,6 +15,7 @@ import {
   Button,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import { EmployeeFormData } from '../../../../data/product-performance';
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -22,28 +23,18 @@ interface AddEmployeeModalProps {
   onSave: (formData: EmployeeFormData) => void;
 }
 
-interface EmployeeFormData {
-  code: string;
-  first_name: string;
-  last_name: string;
-  full_name: string;
-  home_location: string;
-  job_classification: string;
-  date_started: Date | null;
-  address: string;
-  pern: string;
-  no_payment: boolean;
-}
-
 const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ open, onClose, onSave }) => {
   const [formData, setFormData] = React.useState<EmployeeFormData>({
+    id: 1,
     code: '',
+    full_name: '',
+    job_classification: '',
+    default_customer: '',
+    date_started: null,
+    status: '',
     first_name: '',
     last_name: '',
-    full_name: '',
     home_location: '',
-    job_classification: '',
-    date_started: null,
     address: '',
     pern: '',
     no_payment: false,
