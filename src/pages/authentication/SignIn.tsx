@@ -58,12 +58,12 @@ const SignIn = () => {
           spacing={1}
         >
           <Typography variant="h3">Sign in</Typography>
-          <Typography variant="subtitle2" color="neutral.main">
+          {/* <Typography variant="subtitle2" color="neutral.main">
             or{' '}
             <Link href={paths.signup} underline="hover">
               Create an account
             </Link>
-          </Typography>
+          </Typography> */}
         </Stack>
 
         {error && (

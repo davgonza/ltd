@@ -46,22 +46,6 @@ const ProductPerformance = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // TODO - deprecated
-  //   const handleAdd = () => {
-  //     const newRow: EmployeeFormData = {
-  //       id: rows.length + 1,
-  //       assigned: {
-  //         name: `${formData.first_name} ${formData.last_name}`,
-  //         role: formData.job_classification,
-  //       },
-  //       default_customer: `${formData.first_name} ${formData.last_name}`,
-  //       status: 'Low',
-  //       budget: 10000,
-  //     };
-  //     setRows([...rows, newRow]);
-  //     handleAddClose();
-  //   };
-
   const columns: GridColDef<EmployeeFormData>[] = [
     {
       field: 'full_name',
@@ -215,54 +199,6 @@ const ProductPerformance = () => {
       </Box>
       <CustomPagination apiRef={apiRef} />
 
-      {/* Add Modal */}
-      {/* <Modal open={openAddModal} onClose={handleAddClose}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            width: 400,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Add New Employee
-          </Typography>
-          <Stack spacing={2}>
-            <TextField
-              label="First Name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              fullWidth
-            />
-            <TextField
-              label="Last Name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              fullWidth
-            />
-            <TextField
-              label="Job Title"
-              name="job_classification"
-              value={formData.job_classification}
-              onChange={handleChange}
-              fullWidth
-            />
-            <Button variant="contained" color="primary" onClick={handleAdd}>
-              Add
-            </Button>
-          </Stack>
-        </Box>
-      </Modal> */}
-
-      {/* Info Modal */}
       <EmployeeDetailsModal
         openInfoModal={openInfoModal}
         handleInfoClose={handleInfoClose}
