@@ -88,6 +88,36 @@ const sitemap: MenuItem[] = [
     pathName: 'settings',
     icon: 'fluent:settings-24-regular',
     active: true,
+    items: [
+      {
+        id: 12,
+        name: 'Classifications',
+        path: paths.signin,
+        pathName: '#',
+        active: false,
+      },
+      {
+        id: 13,
+        name: 'Sectors',
+        path: paths.signup,
+        pathName: '#',
+        active: false,
+      },
+      {
+        id: 14,
+        name: 'Banks',
+        path: paths.signup,
+        pathName: '#',
+        active: false,
+      },
+      {
+        id: 15,
+        name: 'Users',
+        path: paths.signup,
+        pathName: '#',
+        active: false,
+      },
+    ],
   },
   {
     id: 8,
