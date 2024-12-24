@@ -128,7 +128,7 @@ const AccountDropdown = () => {
             <IconifyIcon icon="ph:caret-down-bold" fontSize={16} color="primary.darker" />
           </Stack>
           <Typography variant="subtitle2" textAlign="left" color="primary.lighter">
-            {userRole ?? (localStorage.getItem('is') == 'true' ? 'Admin' : '')}
+            {localStorage.getItem('is') == 'true' ? 'Admin' : userRole}
           </Typography>
         </Box>
       </Button>
