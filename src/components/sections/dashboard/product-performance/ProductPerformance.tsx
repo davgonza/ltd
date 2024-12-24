@@ -115,7 +115,6 @@ const ProductPerformance = () => {
     {
       field: 'code',
       headerName: 'Code',
-      flex: 1.5,
       minWidth: 200,
     },
     {
@@ -163,8 +162,8 @@ const ProductPerformance = () => {
     {
       field: 'date_started',
       headerName: 'Date Started',
-      flex: 0.5,
-      minWidth: 150,
+      flex: 1.5,
+      minWidth: 200,
     },
     {
       field: 'actions',
@@ -173,7 +172,7 @@ const ProductPerformance = () => {
       flex: 1,
       minWidth: 150,
       renderCell: (params) => (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
           <IconButton color="primary" onClick={() => handleAction('finance', params.row)}>
             <MonetizationOnIcon />
           </IconButton>
