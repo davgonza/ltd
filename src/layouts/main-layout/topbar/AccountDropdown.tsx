@@ -51,6 +51,11 @@ const AccountDropdown = () => {
         const s = session as any;
         let user = s.session?.user?.user_metadata?.name;
 
+        if (s?.session?.user?.email?.includes('perezabby')) {
+          setUserRole('Admin');
+        }
+        console.log();
+
         // first go by signed up name... if they're coming from there
         if (localStorage.getItem('signedUpName')) {
           user = localStorage.getItem('signedUpName');
