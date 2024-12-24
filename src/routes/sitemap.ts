@@ -15,7 +15,7 @@ export interface MenuItem {
 
 const sitemap: MenuItem[] = [
   {
-    id: 1,
+    id: 2,
     name: 'Employees',
     path: rootPaths.root,
     pathName: 'dashboard',
@@ -45,42 +45,42 @@ const sitemap: MenuItem[] = [
       },
     ],
   },
-  /*
+
   {
-    id: 2,
-    name: 'Leaderboard',
+    id: 1,
+    name: 'Customers',
     path: '#!',
     pathName: 'leaderboard',
     icon: 'ri:bar-chart-line',
   },
-  {
-    id: 3,
-    name: 'Order',
-    path: '#!',
-    pathName: 'order',
-    icon: 'ph:shopping-cart-light',
-  },
+  //   {
+  //     id: 3,
+  //     name: 'Order',
+  //     path: '#!',
+  //     pathName: 'order',
+  //     icon: 'ph:shopping-cart-light',
+  //   },
   {
     id: 4,
-    name: 'Products',
+    name: 'Process',
     path: '#!',
     pathName: 'products',
     icon: 'mdi:shopping-outline',
   },
   {
     id: 5,
-    name: 'Sales Report',
+    name: 'Reports',
     path: '#!',
     pathName: 'sales-report',
     icon: 'ph:chart-line',
   },
-  {
-    id: 6,
-    name: 'Messages',
-    path: '#!',
-    pathName: 'messages',
-    icon: 'mdi:message-processing-outline',
-  },
+  //   {
+  //     id: 6,
+  //     name: 'Messages',
+  //     path: '#!',
+  //     pathName: 'messages',
+  //     icon: 'mdi:message-processing-outline',
+  //   },
   {
     id: 7,
     name: 'Settings',
@@ -89,7 +89,6 @@ const sitemap: MenuItem[] = [
     icon: 'fluent:settings-24-regular',
     active: true,
   },
-  */
   {
     id: 8,
     name: 'Sign Out',
