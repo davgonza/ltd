@@ -82,23 +82,30 @@ const ProductPerformance = () => {
 
   const columns: GridColDef<EmployeeFormData>[] = [
     {
+      field: 'code',
+      headerName: 'Code',
+      flex: 1.5,
+      minWidth: 200,
+    },
+    {
       field: 'full_name',
       headerName: 'Name',
       flex: 1.5,
       minWidth: 200,
       renderCell: (params) => (
-        <Stack justifyContent="center" height={1}>
+        <Stack justifyContent="center" height={1} onClick={() => handleInfoOpen(params.row)}>
           <Typography
             variant="h6"
             component={Link}
             href="#!"
             color="text.primary"
             sx={{ width: 'max-content', cursor: 'pointer' }}
-            onClick={() => handleInfoOpen(params.row)}
           >
             {params.row.full_name}
           </Typography>
-          <Typography variant="subtitle2">{params.row.job_classification}</Typography>
+          <Typography sx={{ cursor: 'pointer' }} variant="subtitle2">
+            {params.row.job_classification}
+          </Typography>
         </Stack>
       ),
     },

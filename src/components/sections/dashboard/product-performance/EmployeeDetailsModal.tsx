@@ -174,10 +174,9 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Name"
+                label="Full Name"
                 variant="outlined"
-                required
-                value={formData.name || ''}
+                value={formData.first_name + ' ' + formData.last_name || ''}
                 onChange={(e) => handleChange('name', e.target.value)}
               />
               <TextField
