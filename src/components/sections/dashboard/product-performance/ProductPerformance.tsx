@@ -115,10 +115,8 @@ const ProductPerformance = () => {
       minWidth: 150,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
-          Low: 'success.lighter',
-          Medium: 'info.lighter',
-          High: 'error.lighter',
-          Critical: 'warning.lighter',
+          Active: 'success.lighter',
+          Inactive: 'error.lighter',
         };
 
         return <Chip label={params.value} sx={{ bgcolor: statusColors[params.value] }} />;
@@ -172,6 +170,9 @@ const ProductPerformance = () => {
           columns={columns}
           rows={rows}
           initialState={{
+            sorting: {
+              sortModel: [{ field: 'date_started', sort: 'desc' }],
+            },
             pagination: {
               paginationModel: {
                 pageSize: 10,
@@ -184,7 +185,10 @@ const ProductPerformance = () => {
 
       <EmployeeDetailsModal
         openInfoModal={openInfoModal}
-        handleInfoClose={() => setOpenInfoModal(false)}
+        handleInfoClose={() => {
+          setOpenInfoModal(false);
+          fetchEmployees(); // Refresh the grid
+        }}
         selectedPerson={selectedPerson}
       />
     </Paper>

@@ -6,14 +6,20 @@ import {
   Button,
   Stack,
   TextField,
-  Select,
   MenuItem,
   Tab,
   Tabs,
   Grid,
 } from '@mui/material';
+import { supabase } from '../../../../utils/supabaseClient';
+import {
+  jobClassifications,
+  homeLocations,
+  defaultCustomers,
+} from '../../../../data/dropdown-data';
 
 interface SelectedPerson {
+  id: string; // Make sure the `id` is included for updates
   code?: string;
   first_name?: string;
   last_name?: string;
@@ -23,15 +29,17 @@ interface SelectedPerson {
   status?: string;
   date_started?: string;
   address?: string;
-  defaultCustomer?: string;
+  default_customer?: string;
   pern?: string;
 }
 
 import './EmployeeDetailsModal.css';
 
+import { useEffect } from 'react';
+
 interface EmployeeDetailsModalProps {
   openInfoModal: boolean;
-  handleInfoClose: () => void;
+  handleInfoClose: () => void; // This will now include refreshing the grid
   selectedPerson?: SelectedPerson;
 }
 
@@ -41,15 +49,50 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
   selectedPerson,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [formData, setFormData] = useState<any>(selectedPerson || {});
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
-  const [job_value, job_setValue] = useState('');
-  const [home_value, home_setValue] = useState('');
-  const [status_value, status_setValue] = useState('');
-  const [customer_value, customer_setValue] = useState('');
+  // Debugging useEffect
+  useEffect(() => {
+    if (openInfoModal) {
+      console.log('Modal opened with selected person:', selectedPerson);
+    }
+  }, [openInfoModal, selectedPerson]);
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }));
+  };
+
+  useEffect(() => {
+    if (selectedPerson) {
+      setFormData(selectedPerson); // Initialize formData with selectedPerson data, including id
+    }
+  }, [selectedPerson]);
+
+  const handleSave = async () => {
+    try {
+      if (!formData.id) {
+        console.error('Error: Missing employee id');
+        return;
+      }
+
+      const { id, ...updatedData } = formData;
+
+      const { data, error } = await supabase.from('employees').update(updatedData).eq('id', id);
+
+      if (error) {
+        console.error('Error updating employee:', error.message);
+      } else {
+        console.log('Employee updated successfully:', data);
+        handleInfoClose(); // Close the modal and refresh the grid
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
+  };
 
   return (
     <Modal open={openInfoModal} onClose={handleInfoClose}>
@@ -90,34 +133,40 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 label="Code"
                 variant="outlined"
                 InputProps={{ readOnly: true }}
-                defaultValue={selectedPerson?.code || ''}
+                value={formData.code || ''}
+                onChange={(e) => handleChange('code', e.target.value)}
               />
               <TextField
                 fullWidth
                 label="First Name"
                 variant="outlined"
                 required
-                defaultValue={selectedPerson?.first_name || ''}
+                value={formData.first_name || ''}
+                onChange={(e) => handleChange('first_name', e.target.value)}
               />
               <TextField
                 fullWidth
                 label="Last Name"
                 variant="outlined"
                 required
-                defaultValue={selectedPerson?.last_name || ''}
+                value={formData.last_name || ''}
+                onChange={(e) => handleChange('last_name', e.target.value)}
               />
-
               <TextField
                 sx={{ width: '100%' }}
-                value={job_value}
-                onChange={(e) => job_setValue(e.target.value)}
-                select // tell TextField to render select
+                value={formData.job_classification || ''}
+                onChange={(e) => handleChange('job_classification', e.target.value)}
+                select
                 label="Job Classification"
               >
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                <MenuItem value="Admin">Admin</MenuItem>
+                {jobClassifications.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
 
@@ -128,38 +177,38 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 label="Name"
                 variant="outlined"
                 required
-                defaultValue={selectedPerson?.name || ''}
+                value={formData.name || ''}
+                onChange={(e) => handleChange('name', e.target.value)}
               />
-
-              {/* <Select fullWidth defaultValue={selectedPerson?.home_location || ''} sx={{marginBottom: '20px !important'}}> */}
               <TextField
                 sx={{ width: '100%' }}
-                value={home_value}
-                onChange={(e) => home_setValue(e.target.value)}
+                value={formData.home_location || ''}
+                onChange={(e) => handleChange('home_location', e.target.value)}
                 select
                 label="Home Location"
               >
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                <MenuItem value="1-200-16">1-200-16</MenuItem>
+                {homeLocations.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </TextField>
-
               <TextField
                 sx={{ width: '100%' }}
-                value={status_value}
-                onChange={(e) => status_setValue(e.target.value)}
+                value={formData.status || ''}
+                onChange={(e) => handleChange('status', e.target.value)}
                 select
                 label="Status"
               >
-                {/* <Select sx={{marginBottom: '20px !important'}} fullWidth defaultValue={selectedPerson?.status || ''} required> */}
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="Inactive">Inactive</MenuItem>
               </TextField>
-
               <TextField
                 sx={{ marginBottom: '20px' }}
                 fullWidth
@@ -168,48 +217,53 @@ const EmployeeDetailsModal: React.FC<EmployeeDetailsModalProps> = ({
                 type="date"
                 required
                 InputLabelProps={{ shrink: true }}
-                defaultValue={selectedPerson?.date_started || ''}
+                value={formData.date_started || ''}
+                onChange={(e) => handleChange('date_started', e.target.value)}
               />
               <TextField
                 fullWidth
                 label="Address"
                 variant="outlined"
-                defaultValue={selectedPerson?.address || ''}
+                value={formData.address || ''}
+                onChange={(e) => handleChange('address', e.target.value)}
               />
-
               <TextField
                 sx={{ width: '100%', marginBottom: '20px !important' }}
-                value={customer_value}
-                onChange={(e) => customer_setValue(e.target.value)}
+                value={formData.default_customer || ''}
+                onChange={(e) => handleChange('default_customer', e.target.value)}
                 select
                 label="Default Customer"
               >
-                {/* <Select fullWidth defaultValue={selectedPerson?.defaultCustomer || ''}> */}
                 <MenuItem value="">
                   <em>Select</em>
                 </MenuItem>
-                <MenuItem value="ACBL">ACBL</MenuItem>
-                <MenuItem value="Adams Electric">Adams Electric</MenuItem>
-                <MenuItem value="Wheel Pros">Wheel Pros</MenuItem>
+                {defaultCustomers.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </TextField>
               <TextField
                 fullWidth
                 label="PERN"
                 variant="outlined"
-                defaultValue={selectedPerson?.pern || ''}
+                value={formData.pern || ''}
+                onChange={(e) => handleChange('pern', e.target.value)}
               />
             </Grid>
           </Grid>
         )}
-        {activeTab === 1 && (
-          <Typography>Tab 2 Content: Add specific content or fields for Tab 2 here.</Typography>
-        )}
-        {activeTab === 2 && (
-          <Typography>Tab 3 Content: Add specific content or fields for Tab 3 here.</Typography>
-        )}
-        <Button variant="contained" color="primary" onClick={handleInfoClose} sx={{ mt: 3 }}>
-          Close
-        </Button>
+        {activeTab === 1 && <Typography>Bank Info</Typography>}
+        {activeTab === 2 && <Typography>Other</Typography>}
+
+        <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ mt: 3 }}>
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            Save
+          </Button>
+          <Button variant="contained" color="secondary" onClick={handleInfoClose}>
+            Close
+          </Button>
+        </Stack>
       </Box>
     </Modal>
   );

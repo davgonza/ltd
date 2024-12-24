@@ -144,7 +144,7 @@ const SignUp = () => {
             Sign up
           </Button>
 
-          <Divider sx={{ color: 'neutral.main', my: 2 }}>
+          {/* <Divider sx={{ color: 'neutral.main', my: 2 }}>
             <Typography variant="subtitle2">or sign up with</Typography>
           </Divider>
 
@@ -171,7 +171,7 @@ const SignUp = () => {
                 <Typography>Facebook</Typography>
               </Button>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Box>
       </Paper>
     </Container>
