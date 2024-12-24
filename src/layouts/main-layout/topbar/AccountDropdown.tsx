@@ -53,6 +53,8 @@ const AccountDropdown = () => {
 
         if (s?.session?.user?.email?.includes('perezabby')) {
           setUserRole('Admin');
+          console.log('here 1');
+          localStorage.setItem('is', 'true');
         }
         console.log('test', s?.session?.user);
 
@@ -126,7 +128,7 @@ const AccountDropdown = () => {
             <IconifyIcon icon="ph:caret-down-bold" fontSize={16} color="primary.darker" />
           </Stack>
           <Typography variant="subtitle2" textAlign="left" color="primary.lighter">
-            {userRole}
+            {userRole ?? (localStorage.getItem('is') == 'true' ? 'Admin' : '')}
           </Typography>
         </Box>
       </Button>
