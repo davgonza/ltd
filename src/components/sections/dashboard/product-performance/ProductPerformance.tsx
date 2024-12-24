@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Chip, Link, Modal, Paper, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
+  Modal,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { DataGrid, GridColDef, useGridApiRef } from '@mui/x-data-grid';
 import { supabase } from '../../../../utils/supabaseClient';
 import CustomPagination from 'components/common/CustomPagination';
@@ -7,6 +19,9 @@ import SearchFilter from 'components/common/SearchFilter';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
 import AddEmployeeModal from './AddEmployeeModal';
 import { EmployeeFormData } from '../../../../data/product-performance';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const ProductPerformance = () => {
   const apiRef = useGridApiRef();
@@ -15,6 +30,22 @@ const ProductPerformance = () => {
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(menuAnchorEl);
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleAction = (action: string, row: any) => {
+    console.log(`${action} action for`, row);
+    handleMenuClose();
+  };
 
   const fetchEmployees = async () => {
     try {
@@ -134,6 +165,41 @@ const ProductPerformance = () => {
       headerName: 'Date Started',
       flex: 0.5,
       minWidth: 150,
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false,
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <IconButton color="primary" onClick={() => handleAction('finance', params.row)}>
+            <MonetizationOnIcon />
+          </IconButton>
+          <IconButton color="error" onClick={() => handleAction('delete', params.row)}>
+            <DeleteIcon />
+          </IconButton>
+          <div>
+            <IconButton
+              aria-controls={isMenuOpen ? 'actions-menu' : undefined}
+              aria-haspopup="true"
+              onClick={handleMenuClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="actions-menu"
+              anchorEl={menuAnchorEl}
+              open={isMenuOpen}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={() => handleAction('edit', params.row)}>Edit</MenuItem>
+              <MenuItem onClick={() => handleAction('view', params.row)}>View</MenuItem>
+            </Menu>
+          </div>
+        </div>
+      ),
     },
   ];
 
