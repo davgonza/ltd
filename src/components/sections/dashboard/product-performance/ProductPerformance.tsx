@@ -22,6 +22,7 @@ import { EmployeeFormData } from '../../../../data/product-performance';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import RatesModal from './RatesModal'; // Adjust the path if necessary
 
 const ProductPerformance = () => {
   const apiRef = useGridApiRef();
@@ -33,6 +34,12 @@ const ProductPerformance = () => {
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(menuAnchorEl);
+  const [isRatesModalOpen, setIsRatesModalOpen] = useState(false); // Modal open state
+  const [selectedRateData, setSelectedRateData] = useState<any>(null); // Selected rate data
+  const [selectedEmployeeData, setSelectedEmployeeData] = useState<{
+    name: string;
+    jobClassification: string;
+  } | null>(null); // Selected employee data
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchorEl(event.currentTarget);
@@ -44,6 +51,23 @@ const ProductPerformance = () => {
 
   const handleAction = (action: string, row: any) => {
     console.log(`${action} action for`, row);
+
+    if (action === 'finance') {
+      setSelectedRateData({
+        pay_rate: row.pay_rate,
+        overtime_rate: row.overtime_rate,
+        invoice_rate: row.invoice_rate,
+        customer: row.customer, // Add other rate-specific fields as needed
+      });
+
+      setSelectedEmployeeData({
+        name: row.full_name || 'Unknown Employee', // Replace with the correct field from your data schema
+        jobClassification: row.job_classification || 'Unknown Classification', // Replace with the correct field
+      });
+
+      setIsRatesModalOpen(true); // Open the modal
+    }
+
     handleMenuClose();
   };
 
@@ -262,6 +286,31 @@ const ProductPerformance = () => {
           fetchEmployees(); // Refresh the grid
         }}
         selectedPerson={selectedPerson}
+      />
+      <RatesModal
+        open={isRatesModalOpen}
+        onClose={() => setIsRatesModalOpen(false)}
+        employeeData={selectedEmployeeData}
+        rateHistory={[
+          {
+            customer: 'Adams Electric',
+            pay_rate: 30.0,
+            overtime_rate: 45.0,
+            invoice_rate: 39.5,
+            invoice_rate_ot: 58.0,
+            status: 'Active',
+            deleted: false,
+          },
+          {
+            customer: 'ACBL',
+            pay_rate: 28.0,
+            overtime_rate: 42.0,
+            invoice_rate: 38.0,
+            invoice_rate_ot: 57.0,
+            status: 'Inactive',
+            deleted: true,
+          },
+        ]}
       />
     </Paper>
   );
